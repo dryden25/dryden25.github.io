@@ -447,7 +447,7 @@
             </div>
 
             <div class="card">
-                <h2>6-Inning Game Matrix (All Players Tracked)</h2>
+                <h2>Game Matrix (All Players Tracked)</h2>
                 
                 <div class="tabs-container" id="tabsBar">
                     <button class="tab-btn active" onclick="switchMobileInning(1)">1st</button>
@@ -456,6 +456,7 @@
                     <button class="tab-btn" onclick="switchMobileInning(4)">4th</button>
                     <button class="tab-btn" onclick="switchMobileInning(5)">5th</button>
                     <button class="tab-btn" onclick="switchMobileInning(6)">6th</button>
+                    <button class="tab-btn" onclick="switchMobileInning(6)">7th</button>
                 </div>
 
                 <div class="chart-scroll-wrapper">
@@ -468,21 +469,21 @@
 
 <script>
     const defaultRoster = [
-        "1 Stephen Di Benedetto",
-        "2 Nico Sabatello",
-        "3 Miles Broeker",
-        "4 John Hanson",
-        "5 Liam Knapik",
-        "6 Holden McQuillan",
-        "7 Rylan Romanowski",
-        "8 Javier Sweeney",
-        "9 Christopher Chen",
-        "10 Christian Orlowski",
-        "11 Easton Smith"
+        "Stephen Di Benedetto 1",
+        "Nico Sabatello 2",
+        "Miles Broeker 3",
+        "John Hanson 4",
+        "Liam Knapik 5",
+        "Holden McQuillan 6",
+        "Rylan Romanowski 7",
+        "Javier Sweeney 8",
+        "Chris Chen 9",
+        "Christian Orlowski 10",
+        "Easton Smith 11"
     ];
 
     const defensePositions = {
-        1: "P", 2: "C", 3: "1B", 4: "2B", 5: "3B", 6: "SS", 7: "LF", 8: "CF", 9: "RF"
+        1: "P", 2: "C", 3: "1B", 4: "2B", 5: "3B", 6: "SS", 7: "LF", 8: "CF", 9: "RF", 10: "MI", 11: "LC", 12: "RC"
     };
 
     let activeMobileInningIndex = 1;
@@ -673,11 +674,11 @@
             return;
         }
 
-        // Construct 6-Inning Field Matrix
+        // Construct Field Matrix
         const BATTERS_PER_INNING = 7; 
         let globalLineupPointer = 0; 
 
-        for (let inning = 1; inning <= 6; inning++) {
+        for (let inning = 1; inning <= 7; inning++) {
             const column = document.createElement('div');
             const activeClass = (inning === activeMobileInningIndex) ? 'active-mobile' : '';
             column.className = `inning-column ${activeClass}`;
