@@ -33,7 +33,7 @@
             gap: 15px;
         }
         @media (min-width: 900px) {
-            .layout-grid { grid-template-columns: 360px 1fr; }
+            .layout-grid { grid-template-columns: 320px 1fr; }
         }
 
         .card {
@@ -45,7 +45,6 @@
         }
         h2 { margin-top: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
 
-        /* Actions Bar Layout */
         .actions-row {
             display: flex;
             flex-direction: column;
@@ -105,7 +104,6 @@
             .btn-print { width: auto; }
         }
 
-        /* Attendance Checkbox Grid with dynamic input layout */
         .attendance-list {
             display: grid;
             grid-template-columns: 1fr;
@@ -171,7 +169,6 @@
             text-decoration: line-through;
         }
 
-        /* Shuffled Baseline View */
         .master-lineup-flex { display: flex; flex-wrap: wrap; gap: 6px; }
         .master-badge {
             background: #bae6fd;
@@ -198,7 +195,6 @@
         .master-num { background: rgba(255,255,255,0.7); border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; margin-right: 5px; flex-shrink: 0; }
         .master-note { font-size: 10px; color: #0284c7; margin-left: 5px; font-weight: normal; opacity: 0.85; }
 
-        /* Mobile Inning Tabs Selector */
         .tabs-container {
             display: flex;
             gap: 4px;
@@ -232,7 +228,6 @@
             .tabs-container { display: none; } 
         }
 
-        /* Inning Matrix Grid Layout */
         .chart-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -251,7 +246,7 @@
         }
 
         @media (min-width: 900px) {
-            .chart-grid { grid-template-columns: repeat(6, minmax(150px, 1fr)); }
+            .chart-grid { grid-template-columns: repeat(7, minmax(110px, 1fr)); gap: 8px; }
             .inning-column { display: block !important; }
         }
 
@@ -298,27 +293,27 @@
             flex-shrink: 0;
         }
 
-        /* Batting Status Highlights */
         .will-bat { border-left: 4px solid #3b82f6; }
         .bench-slot { background: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
         .bench-slot .slot-num { background: #cbd5e1; color: #64748b; }
         .bench-slot .pos-tag { background: #e2e8f0; color: #64748b; }
 
-        /* Leadoff Highlights */
         .leadoff-slot { background: #f0fdf4; border-color: #bbf7d0; font-weight: bold; color: #166534; border-left: 4px solid #22c55e; }
         .leadoff-slot .slot-num { background: #22c55e; color: white; }
 
-        /* Print Styles Optimization */
+        /* Print Styles Optimization to tightly fit all 7 columns side-by-side on 1 landscape page */
         @media print {
             @page {
-                size: landscape;
-                margin: 0.4in;
+                size: letter landscape;
+                margin: 0.25in;
             }
             body {
                 background: white !important;
                 color: #000 !important;
                 padding: 0;
+                font-size: 10px !important;
             }
+            /* Hide full sidebar and input tools */
             .layout-grid > div:first-child,
             .actions-row,
             .tabs-container {
@@ -330,46 +325,59 @@
             .card {
                 box-shadow: none !important;
                 padding: 0 !important;
-                margin-bottom: 20px !important;
+                margin-bottom: 10px !important;
                 border: none !important;
             }
             .header {
                 background: #1e3a8a !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                margin-bottom: 20px !important;
+                padding: 8px !important;
+                margin-bottom: 10px !important;
             }
-            .header p { color: #bfdbfe !important; }
+            .header h1 { font-size: 15px !important; }
+            .header p { color: #bfdbfe !important; font-size: 10px !important; }
+            
+            /* Maximize available width by reducing standard spacing and utilizing all 7 lanes */
             .chart-grid {
                 display: grid !important;
-                grid-template-columns: repeat(6, 1fr) !important;
-                gap: 6px !important;
+                grid-template-columns: repeat(7, 1fr) !important;
+                gap: 4px !important;
+                width: 100% !important;
             }
             .inning-column {
                 display: block !important;
                 background: #fff !important;
-                border: 1px solid #94a3b8 !important;
-                padding: 6px !important;
+                border: 1px solid #cbd5e1 !important;
+                padding: 4px !important;
+                border-radius: 4px !important;
             }
             .inning-header {
                 background: #334155 !important;
                 color: white !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
-                font-size: 12px !important;
-                padding: 4px !important;
+                font-size: 11px !important;
+                padding: 3px !important;
+                margin-bottom: 6px !important;
             }
             .slot {
-                border: 1px solid #cbd5e1 !important;
-                padding: 6px 4px !important;
-                margin-bottom: 4px !important;
-                font-size: 11px !important;
+                border: 1px solid #e2e8f0 !important;
+                padding: 4px 3px !important;
+                margin-bottom: 3px !important;
+                font-size: 10px !important;
                 background: #fff !important;
+                border-radius: 4px !important;
+                gap: 2px !important;
             }
             .slot-num {
                 background: #f1f5f9 !important;
                 color: #000 !important;
                 border: 1px solid #cbd5e1 !important;
+                min-width: 16px !important;
+                height: 16px !important;
+                margin-right: 4px !important;
+                font-size: 9px !important;
             }
             .pos-tag {
                 background: #dbeafe !important;
@@ -377,14 +385,18 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
                 border: 1px solid #bfdbfe !important;
+                padding: 2px 4px !important;
+                min-width: 22px !important;
+                font-size: 9px !important;
+                border-radius: 3px !important;
             }
             .will-bat {
-                border-left: 4px solid #3b82f6 !important;
+                border-left: 3px solid #3b82f6 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
             .leadoff-slot {
-                border-left: 4px solid #22c55e !important;
+                border-left: 3px solid #22c55e !important;
                 background: #f0fdf4 !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
@@ -408,6 +420,8 @@
                 border: 1px solid #bae6fd !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                padding: 4px 8px !important;
+                font-size: 10px !important;
             }
             .master-badge.unavailable {
                 background: #f1f5f9 !important;
@@ -447,7 +461,7 @@
             </div>
 
             <div class="card">
-                <h2>Game Matrix (All Players Tracked)</h2>
+                <h2>7-Inning Game Matrix (All Players Tracked)</h2>
                 
                 <div class="tabs-container" id="tabsBar">
                     <button class="tab-btn active" onclick="switchMobileInning(1)">1st</button>
@@ -456,7 +470,7 @@
                     <button class="tab-btn" onclick="switchMobileInning(4)">4th</button>
                     <button class="tab-btn" onclick="switchMobileInning(5)">5th</button>
                     <button class="tab-btn" onclick="switchMobileInning(6)">6th</button>
-                    <button class="tab-btn" onclick="switchMobileInning(6)">7th</button>
+                    <button class="tab-btn" onclick="switchMobileInning(7)">7th</button>
                 </div>
 
                 <div class="chart-scroll-wrapper">
@@ -469,18 +483,18 @@
 
 <script>
     const defaultRoster = [
-        "Stephen Di Benedetto 1",
-        "Nico Sabatello 2",
-        "Miles Broeker 3",
-        "John Hanson 4",
-        "Liam Knapik 5",
-        "Holden McQuillan 6",
-        "Rylan Romanowski 7",
-        "Javier Sweeney 8",
-        "Chris Chen 9",
-        "Christian Orlowski 10",
-        "Easton Smith 11",
-        "Henry Draper 12"
+        "1 Stephen Di Benedetto",
+        "2 Nico Sabatello",
+        "3 Miles Broeker",
+        "4 John Hanson",
+        "5 Liam Knapik",
+        "6 Holden McQuillan",
+        "7 Rylan Romanowski",
+        "8 Javier Sweeney",
+        "9 Christopher Chen",
+        "10 Christian Orlowski",
+        "11 Easton Smith",
+		"12 Henry Draper"
     ];
 
     const defensePositions = {
@@ -491,7 +505,6 @@
     const totalExtraRows = 3;
     const totalRowsCount = defaultRoster.length + totalExtraRows;
 
-    // Set default date picker value to today's local date
     function setDefaultDate() {
         const dateInput = document.getElementById('gameDate');
         const today = new Date();
@@ -501,7 +514,6 @@
         dateInput.value = `${yyyy}-${mm}-${dd}`;
     }
 
-    // Simple hash-based seedable pseudo-random number generator (Mulberry32 variant)
     function seedableRandom(seedString) {
         let hash = 0;
         for (let i = 0; i < seedString.length; i++) {
@@ -616,7 +628,6 @@
         bar.innerHTML = '';
         grid.innerHTML = '';
 
-        // Update Heading to show Selected Game Date
         const selectedDate = document.getElementById('gameDate').value || "default-seed";
         heading.innerText = `Today's Master Batting Order (Game Date: ${selectedDate})`;
 
@@ -644,7 +655,6 @@
             return;
         }
 
-        // Fetch seed and execute Fisher-Yates Shuffle Lineup Sequence
         const nextRandom = seedableRandom(selectedDate);
         let todayLoop = [...activePlayers];
         for (let i = todayLoop.length - 1; i > 0; i--) {
@@ -652,7 +662,6 @@
             [todayLoop[i], todayLoop[j]] = [todayLoop[j], todayLoop[i]];
         }
 
-        // Render Active Layout Sequence
         todayLoop.forEach((player, index) => {
             const badge = document.createElement('div');
             badge.className = 'master-badge';
@@ -661,7 +670,6 @@
             bar.appendChild(badge);
         });
 
-        // Append Unavailable Players with Strikethrough at the End
         unavailablePlayers.forEach((player) => {
             const badge = document.createElement('div');
             badge.className = 'master-badge unavailable';
@@ -675,9 +683,9 @@
             return;
         }
 
-        // Construct Field Matrix
         const BATTERS_PER_INNING = 7; 
         let globalLineupPointer = 0; 
+        const maxDefenders = Object.keys(defensePositions).length; 
 
         for (let inning = 1; inning <= 7; inning++) {
             const column = document.createElement('div');
@@ -692,7 +700,7 @@
                 let inningOrderNumber = relativePosition + 1; 
 
                 let isHittingThisInning = (inningOrderNumber <= BATTERS_PER_INNING);
-                let isDefending = inningOrderNumber <= 12;
+                let isDefending = inningOrderNumber <= maxDefenders;
                 let positionLabel = isDefending ? defensePositions[inningOrderNumber] : "BN";
 
                 inningRosterLayout.push({
@@ -737,7 +745,6 @@
         }
     }
 
-    // Initialize application settings
     setDefaultDate();
     buildAttendanceList();
     generateGameLineupChart();
