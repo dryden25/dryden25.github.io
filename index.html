@@ -85,22 +85,6 @@
             border-color: #3b82f6;
         }
 
-        .btn-shuffle { 
-            background: #10b981; 
-            color: white; 
-            flex: 2;
-            padding: 14px; 
-            font-size: 15px; 
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
-            align-self: flex-end;
-            width: 100%;
-        }
-        .btn-shuffle:active { background: #059669; }
-
         .btn-print {
             background: #2563eb;
             color: white;
@@ -118,7 +102,7 @@
         .btn-print:active { background: #1d4ed8; }
 
         @media (min-width: 600px) {
-            .btn-shuffle, .btn-print { width: auto; }
+            .btn-print { width: auto; }
         }
 
         /* Attendance Checkbox Grid with dynamic input layout */
@@ -198,6 +182,18 @@
             font-size: 12px;
             display: inline-flex;
             align-items: center;
+        }
+        .master-badge.unavailable {
+            background: #f1f5f9;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+        .master-badge.unavailable .master-num {
+            background: rgba(0,0,0,0.05);
+            color: #94a3b8;
+        }
+        .master-badge.unavailable .master-note {
+            color: #94a3b8;
         }
         .master-num { background: rgba(255,255,255,0.7); border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; margin-right: 5px; flex-shrink: 0; }
         .master-note { font-size: 10px; color: #0284c7; margin-left: 5px; font-weight: normal; opacity: 0.85; }
@@ -413,6 +409,11 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
+            .master-badge.unavailable {
+                background: #f1f5f9 !important;
+                color: #94a3b8 !important;
+                border: 1px solid #cbd5e1 !important;
+            }
         }
     </style>
 </head>
@@ -437,12 +438,11 @@
                     <label for="gameDate">Select Game Date</label>
                     <input type="date" id="gameDate" class="game-date-input" onchange="generateGameLineupChart()">
                 </div>
-                <button class="btn btn-shuffle" onclick="generateGameLineupChart()">🎲 Generate Matrix For Selected Date</button>
                 <button class="btn btn-print" onclick="window.print()">🖨️ Print Lineup / PDF</button>
             </div>
             
             <div class="card">
-                <h2>Today's Master Batting Order</h2>
+                <h2 id="masterLineupHeading">Today's Master Batting Order</h2>
                 <div id="masterLineupBar" class="master-lineup-flex"></div>
             </div>
 
@@ -609,53 +609,69 @@
     function generateGameLineupChart() {
         const bar = document.getElementById('masterLineupBar');
         const grid = document.getElementById('chartGrid');
+        const heading = document.getElementById('masterLineupHeading');
         
         bar.innerHTML = '';
         grid.innerHTML = '';
 
+        // Update Heading to show Selected Game Date
+        const selectedDate = document.getElementById('gameDate').value || "default-seed";
+        heading.innerText = `Today's Master Batting Order (Game Date: ${selectedDate})`;
+
         let activePlayers = [];
+        let unavailablePlayers = [];
 
         for (let index = 0; index < totalRowsCount; index++) {
-            const isPresent = document.getElementById(`p-${index}`).checked;
-            if (!isPresent) continue;
-
             const nameInput = document.getElementById(`name-${index}`);
             const playerName = nameInput ? nameInput.value.trim() : "";
-
+            
             if (playerName !== "") {
                 const noteValue = document.getElementById(`note-${index}`).value.trim();
-                activePlayers.push({
-                    name: playerName,
-                    note: noteValue
-                });
+                const isPresent = document.getElementById(`p-${index}`).checked;
+                
+                if (isPresent) {
+                    activePlayers.push({ name: playerName, note: noteValue });
+                } else {
+                    unavailablePlayers.push({ name: playerName, note: noteValue });
+                }
             }
         }
 
-        if (activePlayers.length === 0) {
+        if (activePlayers.length === 0 && unavailablePlayers.length === 0) {
             grid.innerHTML = '<p style="text-align:center; color:#ef4444; font-style:italic; padding: 20px;">No players are selected or named!</p>';
             return;
         }
 
-        // Fetch selected date string to act as our shuffle seed
-        const selectedDate = document.getElementById('gameDate').value || "default-seed";
+        // Fetch seed and execute Fisher-Yates Shuffle Lineup Sequence
         const nextRandom = seedableRandom(selectedDate);
-
-        // Seeded Fisher-Yates Shuffle Lineup Sequence
         let todayLoop = [...activePlayers];
         for (let i = todayLoop.length - 1; i > 0; i--) {
             const j = Math.floor(nextRandom() * (i + 1));
             [todayLoop[i], todayLoop[j]] = [todayLoop[j], todayLoop[i]];
         }
 
-        // Render Master Layout Sequence
+        // Render Active Layout Sequence
         todayLoop.forEach((player, index) => {
             const badge = document.createElement('div');
             badge.className = 'master-badge';
-            
             let noteSpan = player.note ? `<span class="master-note">(${player.note})</span>` : '';
             badge.innerHTML = `<span class="master-num">${index + 1}</span>${player.name}${noteSpan}`;
             bar.appendChild(badge);
         });
+
+        // Append Unavailable Players with Strikethrough at the End
+        unavailablePlayers.forEach((player) => {
+            const badge = document.createElement('div');
+            badge.className = 'master-badge unavailable';
+            let noteSpan = player.note ? `<span class="master-note">(${player.note})</span>` : '';
+            badge.innerHTML = `<span class="master-num">X</span>${player.name}${noteSpan}`;
+            bar.appendChild(badge);
+        });
+
+        if (activePlayers.length === 0) {
+            grid.innerHTML = '<p style="text-align:center; color:#ef4444; font-style:italic; padding: 20px;">No active players to calculate matrix lanes!</p>';
+            return;
+        }
 
         // Construct 6-Inning Field Matrix
         const BATTERS_PER_INNING = 7; 
