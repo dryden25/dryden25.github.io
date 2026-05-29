@@ -691,7 +691,7 @@
                 let inningOrderNumber = relativePosition + 1; 
 
                 let isHittingThisInning = (inningOrderNumber <= BATTERS_PER_INNING);
-                let isDefending = inningOrderNumber <= 9;
+                let isDefending = inningOrderNumber <= 12;
                 let positionLabel = isDefending ? defensePositions[inningOrderNumber] : "BN";
 
                 inningRosterLayout.push({
