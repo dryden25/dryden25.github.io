@@ -246,7 +246,7 @@
         }
 
         @media (min-width: 900px) {
-            .chart-grid { grid-template-columns: repeat(7, minmax(110px, 1fr)); gap: 8px; }
+            .chart-grid { grid-template-columns: repeat(4, minmax(110px, 1fr)); gap: 12px; }
             .inning-column { display: block !important; }
         }
 
@@ -301,19 +301,22 @@
         .leadoff-slot { background: #f0fdf4; border-color: #bbf7d0; font-weight: bold; color: #166534; border-left: 4px solid #22c55e; }
         .leadoff-slot .slot-num { background: #22c55e; color: white; }
 
-        /* Print Styles Optimization to tightly fit all 7 columns side-by-side on 1 landscape page */
+        /* Print optimizations for Portrait mode with NO header block */
         @media print {
             @page {
-                size: letter landscape;
-                margin: 0.25in;
+                size: letter portrait;
+                margin: 0.3in 0.3in 0.2in 0.3in;
             }
             body {
                 background: white !important;
                 color: #000 !important;
                 padding: 0;
-                font-size: 10px !important;
+                font-size: 10.5pt !important;
             }
-            /* Hide full sidebar and input tools */
+            /* CHANGED: Completely suppress the large blue top header block during print */
+            .header {
+                display: none !important;
+            }
             .layout-grid > div:first-child,
             .actions-row,
             .tabs-container {
@@ -328,28 +331,19 @@
                 margin-bottom: 10px !important;
                 border: none !important;
             }
-            .header {
-                background: #1e3a8a !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                padding: 8px !important;
-                margin-bottom: 10px !important;
-            }
-            .header h1 { font-size: 15px !important; }
-            .header p { color: #bfdbfe !important; font-size: 10px !important; }
             
-            /* Maximize available width by reducing standard spacing and utilizing all 7 lanes */
+            /* Print grid format keeps 4 columns per row */
             .chart-grid {
                 display: grid !important;
-                grid-template-columns: repeat(7, 1fr) !important;
-                gap: 4px !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 6px !important;
                 width: 100% !important;
             }
             .inning-column {
                 display: block !important;
                 background: #fff !important;
                 border: 1px solid #cbd5e1 !important;
-                padding: 4px !important;
+                padding: 5px !important;
                 border-radius: 4px !important;
             }
             .inning-header {
@@ -358,13 +352,13 @@
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
                 font-size: 11px !important;
-                padding: 3px !important;
+                padding: 4px !important;
                 margin-bottom: 6px !important;
             }
             .slot {
                 border: 1px solid #e2e8f0 !important;
-                padding: 4px 3px !important;
-                margin-bottom: 3px !important;
+                padding: 4px 4px !important;
+                margin-bottom: 4px !important;
                 font-size: 10px !important;
                 background: #fff !important;
                 border-radius: 4px !important;
@@ -374,8 +368,8 @@
                 background: #f1f5f9 !important;
                 color: #000 !important;
                 border: 1px solid #cbd5e1 !important;
-                min-width: 16px !important;
-                height: 16px !important;
+                min-width: 18px !important;
+                height: 18px !important;
                 margin-right: 4px !important;
                 font-size: 9px !important;
             }
@@ -386,7 +380,7 @@
                 print-color-adjust: exact;
                 border: 1px solid #bfdbfe !important;
                 padding: 2px 4px !important;
-                min-width: 22px !important;
+                min-width: 24px !important;
                 font-size: 9px !important;
                 border-radius: 3px !important;
             }
@@ -483,18 +477,18 @@
 
 <script>
     const defaultRoster = [
-        "1 Stephen Di Benedetto",
-        "2 Nico Sabatello",
-        "3 Miles Broeker",
-        "4 John Hanson",
-        "5 Liam Knapik",
-        "6 Holden McQuillan",
-        "7 Rylan Romanowski",
-        "8 Javier Sweeney",
-        "9 Christopher Chen",
-        "10 Christian Orlowski",
-        "11 Easton Smith",
-		"12 Henry Draper"
+        "Stephen Di Benedetto",
+        "Nico Sabatello",
+        "Miles Broeker",
+        "John Hanson",
+        "Liam Knapik",
+        "Holden McQuillan",
+        "Rylan Romanowski",
+        "Javier Sweeney",
+        "Christopher Chen",
+        "Christian Orlowski",
+        "Easton Smith",
+		"Henry Draper"
     ];
 
     const defensePositions = {
@@ -514,6 +508,7 @@
         dateInput.value = `${yyyy}-${mm}-${dd}`;
     }
 
+    // Hash-based pseudo-random number generator
     function seedableRandom(seedString) {
         let hash = 0;
         for (let i = 0; i < seedString.length; i++) {
